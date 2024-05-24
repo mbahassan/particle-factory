@@ -1,0 +1,3 @@
+add_subdirectory(IGroup)
+add_subdirectory(SolidGroup)
+add_subdirectory(vtkCourse)

@@ -1,0 +1,54 @@
+@startuml
+
+abstract    Shape
+
+Point <|-- Sphere
+Sphere <|-- Shape
+
+Shape <|-- Plate
+
+
+Plate <|-- TPlate
+
+class Point{
+    +Point() = default
+    +Point(double x, double y, double z)
+    +Point(const Point& )
+    +explicit Point(std::vector<double>& )
+    ~Point()
+
+    +void setX(double )
+    +void setY(double )
+    +void setZ(double )
+    +void setPosition(std::vector<double>& )
+
+    +double getX() const
+    +double getY() const
+    +double getZ() const
+    +std::vector<double> getPosition() const
+
+    - x_ : double
+    - y_ : double
+    - z_ : double
+    - position_: std::vector<double>
+}
+
+class Sphere{
++Sphere()
+~Sphere()
+
+-radius_: double
+
++setRadius() : void
++getRadius() : double
+
+}
+
+abstract class Shape{
+    +Shape()
+
+    {abstract} +virtual void setupSpheres()
+    {abstract} +virtual void showSpheres()
+}
+
+@enduml
