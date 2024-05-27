@@ -7,7 +7,7 @@
 
 #include <Shape.h>
 #include <cmath>
-#include <RenderBondedParticles.h>
+#include <RenderShape.h>
 
 
 /*!
@@ -35,10 +35,7 @@ public:
 
     ~CircleSection() = default;
 
-    /**
-     * Function to set-up spheres location
-     **/
-
+    /// Member functions
     void constructor();
 
     void setName(std::string& name) override;
@@ -47,46 +44,36 @@ public:
 
     void showShape() override ;
 
-    void  writeToFile(const std::string &delimiter );
+    void writeToFile(const std::string &delimiter );
 
-    virtual std::vector<Sphere> getSphereHandler();
-
-    virtual void populate();
-
-    double getDelta() const ;
-
-    std::vector<double> getXColumn() const;
-
-    std::vector<double> getYColumn() const;
-
-    std::vector<double> getZColumn() const;
-
-    double minZ_ = 0.0;
+    void setZ(double z) override { zMin = z; }
 
 private:
 
-    bool isOverlap(const Sphere& particle);
+    bool isEligible(const Sphere& particle);
 
     static double distance(const Sphere & sphere1, const Sphere & sphere2);
 
-    int nLayerInR() const ;
+    int nLayerInR()  ;
 
-    std::string name_ ;
+    double circleRadius = 0.0;
 
-    double circleRadius_ = 0.0;
+    double dmax = 2*getRadius();
 
-    double theta_ = 0.0; // in radian
+    double dmin = 2*getRadius() - getDelta();
 
-    int failCounter_ = 0;
+    double theta = 0.0; // in radian
+    double dTheta = 0.0; // in radian
 
-    int maxCount_ = 2000;
+    int failCounter = 0;
 
-    std::vector<double> xColumn_ {};
+    int maxCount = 100;
 
-    std::vector<double> yColumn_ {};
+    int nR = 0;
 
-    std::vector<double> zColumn_ {};
+    double zMin = 0.0;
 
+    std::vector<Sphere> subHandler;
 };
 
 

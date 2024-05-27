@@ -44,11 +44,11 @@ public:
     ~Point();
 
     /// Setters
-    void setX(double x);
+    virtual void setX(double x);
 
-    void setY(double y);
+    virtual void setY(double y);
 
-    void setZ(double z);
+    virtual void setZ(double z);
 
     ///  Getters
     double getX() const;

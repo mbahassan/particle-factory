@@ -8,41 +8,24 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <Sphere.h>
+#include "Sphere.h"
 
 
-class File: public Sphere{
+
+
+class File {
 
 public:
     File() = default ;
 
-    explicit File(std::string& filename);
+    File(const File& file);
 
-    File(const File& filename);
+    void setHandler(std::vector<Sphere>& sphereHandler);
+
+    void setName(std::string& fname);
 
     /// Member Functions
-    void writeToFile(const std::string &);
-
-    void setSphereHandler(const std::vector<Sphere>&);
-
-    /// Setters
-    void setName(std::string& );
-
-    void setXColumn(std::vector<double>&);
-
-    void setYColumn(std::vector<double>&);
-
-    void setZColumn(std::vector<double>&);
-
-    /// Getters
-    std::string getName() const;
-
-    std::vector<double> getXColumn() const;
-
-    std::vector<double> getYColumn() const;
-
-    std::vector<double> getZColumn() const;
-
+    void writeToFile(const std::string &delimiter);
 
 private:
 
@@ -53,15 +36,7 @@ private:
 
     std::string delimiter_ = ",";
 
-    double radius_ = 0;
-
-    std::vector<Sphere> sphereHandler_;
-
-    std::vector<double>  xColumn_ = {0};
-
-    std::vector<double>  yColumn_ = {0};
-
-    std::vector<double>  zColumn_ = {0};
+    std::vector<Sphere> handler;
 
 };
 #endif //WRITECSV_H

@@ -23,7 +23,7 @@ Plate::Plate(const Plate &plate) : Shape (plate)
     ly_ = plate.getYLength();
     lz_ = plate.getZLength();
 
-    sphereHandler_ = plate.getSphereHandler();
+    sphereHandler = plate.sphereHandler;
     minRadius_ = plate.getRadius();
     delta_ = plate.getDelta();
     origin_ = plate.getOrigin() + plate.getRadius();
@@ -47,11 +47,6 @@ void Plate::constructor()
 
     // This is for writing
     file_.setName(name_);
-
-    file_.setXColumn(xColumn_);
-    file_.setYColumn(yColumn_);
-    file_.setZColumn(zColumn_);
-
 }
 
 /*!
@@ -72,7 +67,7 @@ void Plate::createShape()
                 sphere.setY(origin_.getY() + j*(2*minRadius_ - delta_)) ;
                 sphere.setZ(origin_.getZ() + i*(2*minRadius_ - delta_)) ;
                 sphere.setRadius(minRadius_);
-                sphereHandler_.push_back(sphere);
+                sphereHandler.push_back(sphere);
             }
         }
     }
@@ -80,7 +75,7 @@ void Plate::createShape()
 
 void Plate::populate()
 {
-    for (const auto & sphere : sphereHandler_) {
+    for (const auto & sphere : sphereHandler) {
         xColumn_.push_back(sphere.getX());
         yColumn_.push_back(sphere.getY());
         zColumn_.push_back(sphere.getZ());
@@ -90,7 +85,7 @@ void Plate::populate()
 void  Plate::writeToFile(const std::string &delimiter )
 {
     file_.setName(name_);
-    file_.setSphereHandler(sphereHandler_);
+    file_.setHandler(sphereHandler);
     file_.writeToFile(delimiter);
 }
 
@@ -100,7 +95,7 @@ void  Plate::writeToFile(const std::string &delimiter )
 void Plate::showShape()
 {
     constructor();
-    RenderBondedParticles::renderSphere(minRadius_, xColumn_, yColumn_, zColumn_);
+    RenderShape::renderSphere(minRadius_, xColumn_, yColumn_, zColumn_);
 }
 
 int Plate::nLayersInX() const
@@ -121,7 +116,7 @@ int Plate::nLayersInZ() const
 bool Plate::isParticleOverlap(const Sphere& p)
 {
     bool interaction = false;
-    for (const Sphere& s : sphereHandler_)
+    for (const Sphere& s : sphereHandler)
     {
         // calculate the distance between particles
         double d = distance(p, s);
@@ -169,28 +164,4 @@ double Plate::getDelta() const
 Point Plate::getOrigin() const
 {
     return origin_;
-}
-
-
-/*!
- * \return: sphereHandler_: vectorZ of spheres.
- * */
-std::vector<Sphere> Plate::getSphereHandler() const
-{
-    return sphereHandler_;
-}
-
-std::vector<double> Plate::getXColumn() const
-{
-    return xColumn_;
-}
-
-std::vector<double> Plate::getYColumn() const
-{
-    return yColumn_;
-}
-
-std::vector<double> Plate::getZColumn() const
-{
-    return zColumn_;
 }

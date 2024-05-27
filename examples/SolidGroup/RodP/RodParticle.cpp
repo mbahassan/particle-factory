@@ -3,8 +3,7 @@
 //
 
 
-#include <RenderBondedParticles.h>
-//#include <File.h>
+#include <RenderShape.h>
 #include "CircleSection.h"
 
 
@@ -15,41 +14,52 @@ public:
             CircleSection(rodRadius, rMin, delta)
     {
         rodHeight_ = rodHeight;
+
+        if (nlayerInZ() >= layersZ)
+            layersZ = int(nlayerInZ());
+
+        constructor();
     };
+
+    void constructor()
+    {
+        createShape();
+    }
 
     void createShape() override
     {
-        for (int i = 0; i < nlayerInZ(); ++i)
+        for (int i = 0; i < layersZ; ++i)
         {
+            setZ(i * (2 * getRadius() - getDelta())) ;
             CircleSection::createShape();
-            minZ_ = i * (2 * getRadius() - getDelta());
         }
     }
 
     void showShape() override
     {
-        constructor();
-        RenderBondedParticles::renderSphere(minRadius_, xColumn_, yColumn_, zColumn_);
+        RenderShape::renderSphere(sphereHandler);
     }
 
 private:
-    int nlayerInZ()
+    double nlayerInZ()
     {
-        return ceil((rodHeight_ + getDelta()) / (2 * getRadius() - getDelta()));
+        return std::ceil((rodHeight_ + getDelta()) / (2 * getRadius() - getDelta()));
     }
 
     double rodHeight_ = 0.0;
+
+    int layersZ = 1;
 };
 
 
 int main(int argc, char **argv) {
-    double rod_radius = 0.2;
-    double rod_height = 0.8;
+    double rod_radius = 0.02;
+    double rod_height = 0.05;
     double rmin = 0.005;
-    double delta = 0.00;
+    double delta = 0.000;
     RodBar rod( rod_height,rod_radius, rmin, delta);
     rod.showShape();
-    std::cout << "# of spheres " << rod.getSphereHandler().size() << std::endl;
+    std::cout << "# of spheres " << rod.sphereHandler.size() << std::endl;
 
     std::string name ="RodBar.csv", delim = ",";
     //File csv(name, rod.getXColumn(), rod.getYColumn(), rod.getZColumn(), rod.getRadius());

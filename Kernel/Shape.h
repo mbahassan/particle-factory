@@ -5,37 +5,40 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include <Sphere.h>
+
 #include <string>
-#include <File.h>
+
+#include "Sphere.h"
+#include "File.h"
 
 class Shape : public Sphere {
 public:
 
     Shape() = default;
 
-    Shape(const Point& origin, const double minRadius, const double delta)
+    Shape(const Point& origin, const double minRadius, const double delta): Sphere(minRadius)
     {
         origin_ = origin;
-        minRadius_= minRadius;
         delta_    = delta;
     };
 
-    Shape(const double minRadius, const double delta)
+    Shape(const double minRadius, const double delta):Sphere(minRadius)
     {
-        minRadius_= minRadius;
         delta_    = delta;
     };
 
-    Shape(const Point& origin, const double minRadius, const double delta, std::string& name)
+    Shape(const Point& origin, const double minRadius, const double delta, std::string& name):Sphere(minRadius)
     {
         origin_ = origin;
-        minRadius_= minRadius;
         delta_    = delta;
         name_ = name;
     };
 
+    double getDelta() const {return delta_;}
+
     std::string getName() { return name_; }
+
+    std::vector<Sphere> sphereHandler ;
 
 protected:
     /// function members
@@ -53,9 +56,7 @@ protected:
 
     double delta_ = 0.0;
 
-    std::vector<Sphere> sphereHandler_;
-
-    File file_ ;
+    File file ;
 
 };
 

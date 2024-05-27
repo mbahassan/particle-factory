@@ -1,20 +1,25 @@
 //
 // Created by iqraa on 26-3-23.
 //
-#include <File.h>
+#include "File.h"
 
 
 /// Constructors
-File::File(std::string &fileName)
-{
-    fileName_ = fileName;
-}
 
-File::File(const File& filename): fileName_(filename.fileName_)
+File::File(const File& file): fileName_(file.fileName_)
 {
 
 }
 
+void File::setHandler(std::vector<Sphere>& sphereHandler)
+{
+    handler = sphereHandler;
+}
+
+void File::setName(std::string& fname)
+{
+    fileName_ = fname;
+}
 
 /// Function Members
 void File::writeToFile(const std::string &delimiter )
@@ -23,10 +28,6 @@ void File::writeToFile(const std::string &delimiter )
     write();
 }
 
-void File::setSphereHandler(const std::vector<Sphere>& sphereHandler)
-{
-    sphereHandler_ = sphereHandler;
-}
 
 void File::write()
 {
@@ -38,19 +39,19 @@ void File::write()
     if (delimiter_== comma)
     {
         outFile << "x" << "," << "y" << "," << "z" << "," << "radius" << std::endl;
-        for (auto & i : sphereHandler_)
+        for (auto & sphere : handler)
         {
-            outFile << i.getX() << "," << i.getY() << "," << i.getZ()
-                    << "," << i.getRadius() << std::endl;
+            outFile << sphere.getX() << "," << sphere.getY() << "," << sphere.getZ()
+                    << "," << sphere.getRadius() << std::endl;
         }
     }
     else
     {
         outFile << "x" << "\t" << "y" << "\t" << "z" << "\t" << "radius" << std::endl;
-        for (auto & i : sphereHandler_)
+        for (auto & sphere : handler)
         {
-            outFile << i.getX() << "," << i.getY() << "," << i.getZ()
-                    << "," << i.getRadius() << std::endl;;
+            outFile << sphere.getX() << "," << sphere.getY() << "," << sphere.getZ()
+                    << "," << sphere.getRadius() << std::endl;;
         }
     }
 
@@ -58,45 +59,3 @@ void File::write()
 }
 
 
-/// Setters
-void File::setName(std::string& fileName)
-{
-    fileName_ = fileName;
-}
-
-void File::setXColumn(std::vector<double>& xColumn)
-{
-    xColumn_ = xColumn;
-}
-
-void File::setYColumn(std::vector<double>& yColumn)
-{
-    yColumn_ = yColumn;
-}
-
-void File::setZColumn(std::vector<double>& zColumn)
-{
-    zColumn_ = zColumn;
-}
-
-
-/// Getters
-std::string File::getName() const
-{
-    return fileName_;
-}
-
-std::vector<double> File::getXColumn() const
-{
-    return xColumn_;
-}
-
-std::vector<double> File::getYColumn() const
-{
-    return yColumn_;
-}
-
-std::vector<double> File::getZColumn() const
-{
-    return zColumn_;
-}

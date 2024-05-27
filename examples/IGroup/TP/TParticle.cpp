@@ -29,7 +29,7 @@ public:
             radius_ = sphere.getRadius();
         }
         // VTK part
-        RenderBondedParticles::renderSphere(radius_, xColumn_, yColumn_, zColumn_);
+        RenderShape::renderSphere(radius_, xColumn_, yColumn_, zColumn_);
     }
 
     void writeToFile(const std::string &delimiter ) override

@@ -4,7 +4,7 @@
 //
 // Created by mbahassan on 17-10-23.
 //
-#include "RenderBondedParticles.h"
+#include "RenderShape.h"
 #include "File.h"
 #include "Plate.h"
 
@@ -33,7 +33,7 @@ public:
             radius_ = sphere.getRadius();
         }
         // VTK part
-        RenderBondedParticles::renderSphere(radius_, xColumn_, yColumn_, zColumn_);
+        RenderShape::renderSphere(radius_, xColumn_, yColumn_, zColumn_);
     }
 
     void writeToFile(const std::string &delimiter ) override

@@ -14,15 +14,10 @@ CircleSection(): Shape()
 }
 
 CircleSection::
-CircleSection(double radius, double rMin, double delta, Point& origin ):
+CircleSection(double circRadius, double rMin, double delta, Point& origin ):
 Shape(origin, rMin, delta)
 {
-    circleRadius_ = radius;
-
-    // add the center sphere
-    Sphere sphere;
-    sphere.setRadius(minRadius_) ;
-    sphereHandler_.push_back(sphere);
+    circleRadius = circRadius;
 
     //
     constructor();
@@ -30,11 +25,11 @@ Shape(origin, rMin, delta)
 
 
 CircleSection::
-CircleSection(double radius, double rMin, double delta ):
+CircleSection(double circRadius, double rMin, double delta ):
         Shape( rMin, delta)
 {
-    circleRadius_ = radius;
-
+    circleRadius = circRadius;
+    nLayerInR();
     //
     constructor();
 }
@@ -44,9 +39,8 @@ CircleSection::
 CircleSection(const CircleSection & circleCrossSection):
 Shape(circleCrossSection.origin_, circleCrossSection.minRadius_,circleCrossSection.delta_)
 {
-    circleRadius_ = circleCrossSection.circleRadius_;
+    circleRadius = circleCrossSection.circleRadius;
 
-    //
     constructor();
 }
 
@@ -57,15 +51,6 @@ Shape(circleCrossSection.origin_, circleCrossSection.minRadius_,circleCrossSecti
 void CircleSection::constructor()
 {
     createShape();
-    populate();
-
-    // This is for writing
-    file_.setName(name_);
-
-    file_.setXColumn(xColumn_);
-    file_.setYColumn(yColumn_);
-    file_.setZColumn(zColumn_);
-
 }
 
 void CircleSection::setName(std::string& name)
@@ -76,73 +61,73 @@ void CircleSection::setName(std::string& name)
 void CircleSection::createShape()
 {
 
-    Sphere particle;
-    particle.setRadius(minRadius_) ;
-    sphereHandler_.push_back(particle);
-
 
     // loop over the radial layers
-    for (int j = 0; j < nLayerInR(); ++j) {
-        failCounter_ = 0;
-        theta_ = 0;
+    for (int j = 1; j < nR; ++j)
+    {
+        Sphere particle;
+        particle.setRadius(getRadius());
+        sphereHandler.push_back(particle);
+
+        failCounter = 0;
+        theta = 0;
         // update the radius
-        double radialPosition = j * (2.0 * minRadius_ - delta_);
+        double radialPosition = j * (2.0 * getRadius() - getDelta());
 
-        // check if there is overlap
-        do {
-            particle.setX(radialPosition * std::cos(theta_));
-            particle.setY(radialPosition * std::sin(theta_));
-            particle.setZ(minZ_);
-            particle.setRadius(minRadius_) ;
-            theta_ += (2.0 * M_PI) /1000;
+        // Distance between the centers of adjacent spheres
+        double distance = 2 * getRadius() - getDelta();
 
-            if (!isOverlap(particle)) {
-                sphereHandler_.push_back(particle);
-            } else {
-                // increase failCounter
-                failCounter_ += 1;
-            }
-        } while (failCounter_ < maxCount_);
+        // Circumference of the central circle
+        double circumference = 2 * M_PI * radialPosition;
+
+        // Number of spheres that fit around the circle
+        int N = static_cast<int>(round(circumference / distance));
+
+        // Calculate the angle between each sphere
+        double angleIncrement = 2 * M_PI / N;
+
+        // Calculate the positions of the spheres
+        for (int i = 0; i < N; ++i) {
+            double angle = i * angleIncrement;
+            Point pos;
+            particle.setX(getRadius() * cos(angle));
+            particle.setY(getRadius() * sin(angle));
+            particle.setZ(zMin);
+            sphereHandler.push_back(particle);
+        }
+
     }
+
+    // clear the subHandler
+    subHandler.clear();
 }
 
 void CircleSection::showShape()
 {
-    constructor();
-    RenderBondedParticles::renderSphere(minRadius_, xColumn_, yColumn_, zColumn_);
+    RenderShape::renderSphere(sphereHandler);
 }
 
-std::vector<Sphere> CircleSection::getSphereHandler()
-{
-    return sphereHandler_;
-}
 
 void  CircleSection::writeToFile(const std::string &delimiter )
 {
-    file_.setName(name_);
-    file_.setSphereHandler(sphereHandler_);
-    file_.writeToFile(delimiter);
+    file.setName(name_);
+    file.setHandler(sphereHandler);
+    file.writeToFile(delimiter);
 }
 
-void CircleSection::populate()
+bool CircleSection::isEligible(const Sphere& particle)
 {
-    for (auto& sphere : sphereHandler_) {
-        xColumn_.push_back(sphere.getX());
-        yColumn_.push_back(sphere.getY());
-        zColumn_.push_back(sphere.getZ());
-    }
-}
+    if (subHandler.empty()) return true;
 
-
-bool CircleSection::isOverlap(const Sphere& particle)
-{
     bool interaction = false;
-    if (sphereHandler_.empty()) return interaction;
-    for (const Sphere & sphere: sphereHandler_) {
+
+    for (const Sphere & sphere: subHandler)
+    {
         // calculate the distance between particles
         double d = distance(particle, sphere);
-
-        if (d < (particle.getRadius() + sphere.getRadius() - delta_)) {
+        double dm = (particle.getRadius() + sphere.getRadius());
+        if (d <= dm + 0.5*getDelta() || d >= dm - 0.5 *getDelta())
+        {
             interaction = true;
             break;
         }
@@ -160,28 +145,7 @@ double CircleSection::distance(const Sphere &sphere1, const Sphere& sphere2)
     return sqrt(xSquare + ySquare + zSquare);
 }
 
-int CircleSection::nLayerInR() const
+int CircleSection::nLayerInR()
 {
-    return ceil( (delta_ + circleRadius_) / (2 * minRadius_ - delta_) );
+    return nR = int((circleRadius + getDelta()) / (2 * getRadius() - getDelta()));
 }
-
-
-double CircleSection::getDelta() const
-{
-    return delta_;
-}
-
-std::vector<double> CircleSection::getXColumn() const
-{
-    return xColumn_;
-};
-
-std::vector<double> CircleSection::getYColumn() const
-{
-    return yColumn_;
-};
-
-std::vector<double> CircleSection::getZColumn() const
-{
-    return zColumn_;
-};

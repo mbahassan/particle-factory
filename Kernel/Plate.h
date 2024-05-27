@@ -11,7 +11,7 @@
 
 #include <Shape.h>
 #include <cmath>
-#include <RenderBondedParticles.h>
+#include <RenderShape.h>
 #include <File.h>
 
 
@@ -54,13 +54,6 @@ public:
 
     Point getOrigin() const;
 
-    std::vector<Sphere> getSphereHandler() const;
-
-    std::vector<double> getXColumn() const;
-
-    std::vector<double> getYColumn() const;
-
-    std::vector<double> getZColumn() const;
 
 private:
 

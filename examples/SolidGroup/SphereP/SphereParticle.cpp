@@ -41,7 +41,7 @@
 //        py1.push_back(sphere.y);
 //        pz1.push_back(sphere.z);
 //    }
-//    RenderBondedParticles::renderSphere(r1,px1,py1,pz1);
+//    RenderShape::renderSphere(r1,px1,py1,pz1);
 //
 //    // prepare it and write it to a file
 //    std::string f2 = "SphereP.txt";

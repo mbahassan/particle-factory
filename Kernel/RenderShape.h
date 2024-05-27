@@ -20,13 +20,11 @@
 #include <iostream>
 #include <vector>
 
+#include "Shape.h"
 
-class RenderBondedParticles{
+class RenderShape{
 public:
-
-    static void renderSphere(double r, std::vector<double>& x);
-
-    static void renderSphere(double r, std::vector<double>& x,std::vector<double>& y);
+    static void renderSphere(std::vector<Sphere>& sphereHandler);
 
     static void renderSphere(double r, std::vector<double>& x,std::vector<double>& y,std::vector<double>& z);
 
