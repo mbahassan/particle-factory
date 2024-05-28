@@ -22,22 +22,18 @@ public:
 
     void constructor()
     {
-        createShape();
+        create();
     }
 
-    void createShape() override
+    void create()
     {
         for (int i = 0; i < layersZ; ++i)
         {
             setZ(i * (2 * getRadius() - getDelta())) ;
-            CircleSection::createShape();
+            createShape();
         }
     }
 
-    void showShape() override
-    {
-        RenderShape::renderSphere(sphereHandler);
-    }
 
 private:
     double nlayerInZ()
@@ -51,17 +47,20 @@ private:
 };
 
 
-int main(int argc, char **argv) {
-    double rod_radius = 0.02;
-    double rod_height = 0.05;
+int main(int argc, char **argv)
+{
+    std::string name ="Rod.csv", delim = ",";
+    double rodRadius = 0.05;
+    double rodHeight = 0.1;
     double rmin = 0.005;
     double delta = 0.000;
-    RodBar rod( rod_height,rod_radius, rmin, delta);
+
+    RodBar rod(rodHeight,rodRadius, rmin, delta);
+
     rod.showShape();
     std::cout << "# of spheres " << rod.sphereHandler.size() << std::endl;
 
-    std::string name ="RodBar.csv", delim = ",";
-    //File csv(name, rod.getXColumn(), rod.getYColumn(), rod.getZColumn(), rod.getRadius());
-    //csv.writeToFile(delim);
+    rod.setName(name);
+    rod.writeToFile(delim);
     return 0;
 }
