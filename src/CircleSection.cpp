@@ -60,9 +60,9 @@ void CircleSection::setName(std::string& name)
     name_ = name;
 }
 
+
 void CircleSection::createShape()
 {
-
     Sphere particle;
     particle.setRadius(getRadius());
     //sphereHandler.push_back(particle);
@@ -72,8 +72,19 @@ void CircleSection::createShape()
     {
         failCounter = 0;
         theta = 0;
+        // Effective distance
+        double dEff = (2.0 * getRadius() - getDelta());
+
         // update the radius
-        double radialPosition = j * (2.0 * getRadius() - getDelta());
+        double radialPosition = j * dEff;
+
+        double circumference = 2*M_PI*radialPosition;
+
+        // Calc number of spheres
+        int nSphere = circumference / (2*getRadius() - 2*getDelta());
+
+        // Calc dTheta
+        dTheta = 2*M_PI / nSphere;
 
         // check if there is overlap
         do {
@@ -83,22 +94,21 @@ void CircleSection::createShape()
             particle.setY(Y);
             particle.setZ(zMin);
             particle.setRadius(getRadius());
-
+            sphereHandler.push_back(particle);
             if (isEligible(particle))
             {
-                sphereHandler.push_back(particle);
-                subHandler.push_back(particle);
+                //sphereHandler.push_back(particle);
+                //subHandler.push_back(particle);
             } else
             {
                 // increase failCounter
-                failCounter += 1;
+                // failCounter += 1;
             }
 
             // update theta
-            theta += M_PI / 100;
-            // theta += dTheta;
+            theta += dTheta;
 
-        } while (failCounter < maxCount);
+        } while (failCounter < maxCount && theta <= 2*M_PI);
     }
 
     // clear the subHandler
@@ -111,31 +121,25 @@ void CircleSection::showShape()
 }
 
 
-void  CircleSection::writeToFile(const std::string &delimiter )
-{
-    file.setName(name_);
-    file.setHandler(sphereHandler);
-    file.writeToFile(delimiter);
-}
-
 bool CircleSection::isEligible(const Sphere& particle)
 {
     if (subHandler.empty()) return true;
 
-    bool interaction = false;
+    bool eligible = false;
 
     for (const Sphere & sphere: subHandler)
     {
         // calculate the distance between particles
         double d = distance(particle, sphere);
-
+        double dmax = 2*getRadius() - getDelta() + 0.5*getDelta();
+        double dmin = 2*getRadius() - getDelta() - 0.5*getDelta();
         if (d <= dmax && d >= dmin )
         {
-            interaction = true;
+            eligible = true;
             break;
         }
     }
-    return interaction;
+    return eligible;
 }
 
 double CircleSection::distance(const Sphere &sphere1, const Sphere& sphere2)

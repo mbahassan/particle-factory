@@ -16,23 +16,33 @@ public:
 
     Shape() = default;
 
-    Shape(const Point& origin, const double minRadius, const double delta): Sphere(minRadius)
+    Shape(const Point& origin, const double minRadius, const double delta):
+    Sphere(minRadius)
     {
         origin_ = origin;
         delta_    = delta;
     };
 
-    Shape(const double minRadius, const double delta):Sphere(minRadius)
+    Shape(const double minRadius, const double delta):
+    Sphere(minRadius)
     {
         delta_    = delta;
     };
 
-    Shape(const Point& origin, const double minRadius, const double delta, std::string& name):Sphere(minRadius)
+    Shape(const Point& origin, const double minRadius, const double delta, std::string& name):
+    Sphere(minRadius)
     {
         origin_ = origin;
         delta_    = delta;
         name_ = name;
     };
+
+    void  writeToFile(const std::string &delimiter )
+    {
+        file.setName(name_);
+        file.setHandler(sphereHandler);
+        file.writeToFile(delimiter);
+    }
 
     double getDelta() const {return delta_;}
 

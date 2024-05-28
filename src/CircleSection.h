@@ -45,8 +45,6 @@ public:
 
     void showShape() override ;
 
-    void writeToFile(const std::string &delimiter );
-
     void setZ(double z) override { zMin = z; }
 
 private:
@@ -58,10 +56,6 @@ private:
     int nLayerInR()  ;
 
     double circleRadius = 0.0;
-
-    double dmax = 2*getRadius() - getDelta()  + 0.5*getDelta();
-
-    double dmin = 2*getRadius() - getDelta()  - 0.5*getDelta();
 
     double theta = 0.0; // in radian
     double dTheta = 0.0; // in radian
