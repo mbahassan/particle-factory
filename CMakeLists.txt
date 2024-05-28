@@ -4,6 +4,6 @@ project(BondedParticles)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_subdirectory(Kernel)
+add_subdirectory(src)
 add_subdirectory(examples)
 

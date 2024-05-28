@@ -1,7 +1,7 @@
 //
 // Created by iqraa on 25-3-23.
 //
-#include <RenderShape.h>
+#include "RenderShape.h"
 
 void RenderShape::renderSphere(std::vector<Sphere>& sphereHandler){
     vtkNew<vtkNamedColors> colors;
@@ -13,8 +13,8 @@ void RenderShape::renderSphere(std::vector<Sphere>& sphereHandler){
 
     vtkNew<vtkSphereSource> sphere;
 
-    sphere->SetPhiResolution(10);
-    sphere->SetThetaResolution(10);
+    sphere->SetPhiResolution(20);
+    sphere->SetThetaResolution(20);
 
     for (auto & sh : sphereHandler)
     {

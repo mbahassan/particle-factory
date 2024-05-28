@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.24)
 
-#project(test)
+set(EXE_NAME Disk)
+set(SOURCES Disk.cpp)
 
-set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Disk Disk.cpp)
-target_link_libraries(Disk PRIVATE BondedPG)
+add_executable(${EXE_NAME} ${SOURCES})
+target_link_libraries(${EXE_NAME}
+        PRIVATE Driver)
+
+include_directories( ${CMAKE_SOURCE_DIR}/src)

@@ -10,6 +10,7 @@
 CircleSection::
 CircleSection(): Shape()
 {
+    nR = nLayerInR();
     constructor();
 }
 
@@ -18,7 +19,7 @@ CircleSection(double circRadius, double rMin, double delta, Point& origin ):
 Shape(origin, rMin, delta)
 {
     circleRadius = circRadius;
-
+    nR = nLayerInR();
     //
     constructor();
 }
@@ -29,24 +30,25 @@ CircleSection(double circRadius, double rMin, double delta ):
         Shape( rMin, delta)
 {
     circleRadius = circRadius;
-    nLayerInR();
+    nR = nLayerInR();
+
     //
     constructor();
 }
 
 
 CircleSection::
-CircleSection(const CircleSection & circleCrossSection):
-Shape(circleCrossSection.origin_, circleCrossSection.minRadius_,circleCrossSection.delta_)
+CircleSection(const CircleSection& circleSection):
+Shape(circleSection.origin_, circleSection.minRadius_, circleSection.delta_)
 {
-    circleRadius = circleCrossSection.circleRadius;
-
+    circleRadius = circleSection.circleRadius;
+    nR = nLayerInR();
     constructor();
 }
 
 /**
  * Function members
- * */
+ **/
 
 void CircleSection::constructor()
 {
@@ -61,41 +63,42 @@ void CircleSection::setName(std::string& name)
 void CircleSection::createShape()
 {
 
+    Sphere particle;
+    particle.setRadius(getRadius());
+    //sphereHandler.push_back(particle);
 
     // loop over the radial layers
-    for (int j = 1; j < nR; ++j)
+    for (int j = 0; j < nR; ++j)
     {
-        Sphere particle;
-        particle.setRadius(getRadius());
-        sphereHandler.push_back(particle);
-
         failCounter = 0;
         theta = 0;
         // update the radius
         double radialPosition = j * (2.0 * getRadius() - getDelta());
 
-        // Distance between the centers of adjacent spheres
-        double distance = 2 * getRadius() - getDelta();
-
-        // Circumference of the central circle
-        double circumference = 2 * M_PI * radialPosition;
-
-        // Number of spheres that fit around the circle
-        int N = static_cast<int>(round(circumference / distance));
-
-        // Calculate the angle between each sphere
-        double angleIncrement = 2 * M_PI / N;
-
-        // Calculate the positions of the spheres
-        for (int i = 0; i < N; ++i) {
-            double angle = i * angleIncrement;
-            Point pos;
-            particle.setX(getRadius() * cos(angle));
-            particle.setY(getRadius() * sin(angle));
+        // check if there is overlap
+        do {
+            double X = radialPosition * std::cos(theta);
+            double Y = radialPosition * std::sin(theta);
+            particle.setX(X);
+            particle.setY(Y);
             particle.setZ(zMin);
-            sphereHandler.push_back(particle);
-        }
+            particle.setRadius(getRadius());
 
+            if (isEligible(particle))
+            {
+                sphereHandler.push_back(particle);
+                subHandler.push_back(particle);
+            } else
+            {
+                // increase failCounter
+                failCounter += 1;
+            }
+
+            // update theta
+            theta += M_PI / 100;
+            // theta += dTheta;
+
+        } while (failCounter < maxCount);
     }
 
     // clear the subHandler
@@ -125,8 +128,8 @@ bool CircleSection::isEligible(const Sphere& particle)
     {
         // calculate the distance between particles
         double d = distance(particle, sphere);
-        double dm = (particle.getRadius() + sphere.getRadius());
-        if (d <= dm + 0.5*getDelta() || d >= dm - 0.5 *getDelta())
+
+        if (d <= dmax && d >= dmin )
         {
             interaction = true;
             break;
@@ -147,5 +150,5 @@ double CircleSection::distance(const Sphere &sphere1, const Sphere& sphere2)
 
 int CircleSection::nLayerInR()
 {
-    return nR = int((circleRadius + getDelta()) / (2 * getRadius() - getDelta()));
+    return  std::ceil((circleRadius- getRadius()) / (2 * getRadius() - getDelta()));
 }

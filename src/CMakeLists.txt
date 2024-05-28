@@ -1,10 +1,7 @@
 set(LIB_NAME Driver)
 set(SOURCES
-        RenderBondedParticles.cpp
+        RenderShape.cpp
         Shape.cpp
-        XDirection.cpp
-        YDirection.cpp
-        ZDirection.cpp
         File.cpp
         Sphere.cpp
         Plate.cpp
@@ -14,7 +11,7 @@ set(SOURCES
 
 add_library(${LIB_NAME} ${SOURCES})
 
-
+include_directories( ${CMAKE_SOURCE_DIR}/src )
 
 # VTK Library
 set(VTK_DIR "${CMAKE_SOURCE_DIR}/../3rdParty/VTK-build")

@@ -5,10 +5,11 @@
 #ifndef CIRCLECROSSSECTION_H
 #define CIRCLECROSSSECTION_H
 
-#include <Shape.h>
-#include <cmath>
-#include <RenderShape.h>
 
+#include <cmath>
+
+#include "RenderShape.h"
+#include "Shape.h"
 
 /*!
  * Usage:
@@ -58,16 +59,16 @@ private:
 
     double circleRadius = 0.0;
 
-    double dmax = 2*getRadius();
+    double dmax = 2*getRadius() - getDelta()  + 0.5*getDelta();
 
-    double dmin = 2*getRadius() - getDelta();
+    double dmin = 2*getRadius() - getDelta()  - 0.5*getDelta();
 
     double theta = 0.0; // in radian
     double dTheta = 0.0; // in radian
 
     int failCounter = 0;
 
-    int maxCount = 100;
+    int maxCount = 10;
 
     int nR = 0;
 

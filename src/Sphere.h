@@ -6,7 +6,8 @@
 #define SPHERE_H
 
 #include <vector>
-#include <Point.h>
+
+#include "Point.h"
 
 
 class Sphere: public Point
