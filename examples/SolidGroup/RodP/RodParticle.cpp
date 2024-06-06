@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     double rodRadius = 0.05;
     double rodHeight = 0.1;
     double rmin = 0.005;
-    double delta = 0.000;
+    double delta = 0.001;
 
     RodBar rod(rodHeight,rodRadius, rmin, delta);
 
