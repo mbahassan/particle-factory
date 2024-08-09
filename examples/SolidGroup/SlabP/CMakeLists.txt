@@ -7,4 +7,7 @@ add_executable(${EXE_NAME}  ${SOURCE})
 
 target_link_libraries(${EXE_NAME}
         PRIVATE
-        BondedPG)
+        Driver)
+
+include_directories( ${CMAKE_SOURCE_DIR}/src)
+include_directories( ${CMAKE_SOURCE_DIR}/examples/SolidGroup/SlabP)

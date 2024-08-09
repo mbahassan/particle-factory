@@ -16,33 +16,13 @@ public:
 
     Shape() = default;
 
-    Shape(const Point& origin, const double minRadius, const double delta):
-    Sphere(minRadius)
-    {
-        origin_ = origin;
-        delta_    = delta;
-    };
+    Shape(const Point& origin, double minRadius, double delta);
 
-    Shape(const double minRadius, const double delta):
-    Sphere(minRadius)
-    {
-        delta_    = delta;
-    };
+    Shape(double minRadius, double delta);
 
-    Shape(const Point& origin, const double minRadius, const double delta, std::string& name):
-    Sphere(minRadius)
-    {
-        origin_ = origin;
-        delta_    = delta;
-        name_ = name;
-    };
+    Shape(const Point& origin, double minRadius, double delta, std::string& name);
 
-    void  writeToFile(const std::string &delimiter )
-    {
-        file.setName(name_);
-        file.setHandler(sphereHandler);
-        file.writeToFile(delimiter);
-    }
+    virtual void  writeToFile(const std::string &delimiter );
 
     double getDelta() const {return delta_;}
 
@@ -50,13 +30,17 @@ public:
 
     std::vector<Sphere> sphereHandler ;
 
+    /*!
+     * \brief function to render the spheres and show them using VTK.
+     */
+
+    void showShape();
+
 protected:
     /// function members
     virtual void setName(std::string& name) = 0;
 
     virtual void createShape() = 0;
-
-    virtual void showShape() = 0;
 
     Point origin_;
 

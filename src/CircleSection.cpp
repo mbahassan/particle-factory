@@ -60,7 +60,6 @@ void CircleSection::setName(std::string& name)
     name_ = name;
 }
 
-
 void CircleSection::createShape()
 {
     Sphere particle;
@@ -114,12 +113,6 @@ void CircleSection::createShape()
     // clear the subHandler
     subHandler.clear();
 }
-
-void CircleSection::showShape()
-{
-    RenderShape::renderSphere(sphereHandler);
-}
-
 
 bool CircleSection::isEligible(const Sphere& particle)
 {

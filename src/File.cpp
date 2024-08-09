@@ -50,8 +50,8 @@ void File::write()
         outFile << "x" << "\t" << "y" << "\t" << "z" << "\t" << "radius" << std::endl;
         for (auto & sphere : handler)
         {
-            outFile << sphere.getX() << "," << sphere.getY() << "," << sphere.getZ()
-                    << "," << sphere.getRadius() << std::endl;;
+            outFile << sphere.getX() << "\t" << sphere.getY() << "\t" << sphere.getZ()
+                    << "\t" << sphere.getRadius() << std::endl;;
         }
     }
 

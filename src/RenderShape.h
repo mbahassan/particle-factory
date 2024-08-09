@@ -22,7 +22,8 @@
 
 #include "Shape.h"
 
-class RenderShape{
+class RenderShape
+{
 public:
     static void renderSphere(std::vector<Sphere>& sphereHandler);
 

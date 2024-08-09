@@ -43,8 +43,6 @@ public:
 
     void createShape() override;
 
-    void showShape() override ;
-
     void setZ(double z) override { zMin = z; }
 
 private:

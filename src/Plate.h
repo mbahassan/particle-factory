@@ -41,9 +41,7 @@ public:
 
     void createShape() override;
 
-    void showShape() override ;
-
-    virtual void writeToFile (const std::string &);
+//    void showShape() override ;
 
     /// Getters
     double getXLength() const;
@@ -52,14 +50,10 @@ public:
 
     double getZLength() const;
 
-    double getDelta() const;
-
     Point getOrigin() const;
 
 
 private:
-
-    void populate();
 
     int nLayersInX() const;
 
@@ -78,13 +72,6 @@ private:
     double ly_ = 0.0;
 
     double lz_ = 0.0;
-
-    std::vector<double> xColumn_ {};
-
-    std::vector<double> yColumn_ {};
-
-    std::vector<double> zColumn_ {};
-
 
     File file_ ;
 };

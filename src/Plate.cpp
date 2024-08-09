@@ -5,11 +5,16 @@
 #include "Plate.h"
 
 /// Constructors
+
+/*! @brief default constructor*/
 Plate::Plate(): Shape()
 {
     constructor();
 }
 
+/*!
+ * @brief constructor passing the dimensions and the sphere radius and the overlap and the origin of the shape.
+ * */
 Plate::Plate( double xLen, double yLen, double zLen, double minRadius,  double delta,
              const Point& origin): Shape(origin + minRadius, minRadius, delta)
 {
@@ -43,7 +48,6 @@ Plate::~Plate()= default;
 void Plate::constructor()
 {
     createShape();
-    populate();
 
     // This is for writing
     file_.setName(name_);
@@ -56,61 +60,40 @@ void Plate::constructor()
 
 void Plate::createShape()
 {
-    Sphere sphere;
+    Sphere sphere(getRadius());
     for (int i = 0; i < nLayersInZ(); ++i)
     {
         for (int j = 0; j < nLayersInY(); ++j)
         {
             for (int k = 0; k < nLayersInX(); ++k)
             {
-                sphere.setX(origin_.getX() + k*(2*minRadius_ - delta_)) ;
-                sphere.setY(origin_.getY() + j*(2*minRadius_ - delta_)) ;
-                sphere.setZ(origin_.getZ() + i*(2*minRadius_ - delta_)) ;
-                sphere.setRadius(minRadius_);
+                sphere.setX(origin_.getX() + k*(2*getRadius() - getDelta())) ;
+                sphere.setY(origin_.getY() + j*(2*getRadius() - getDelta())) ;
+                sphere.setZ(origin_.getZ() + i*(2*getRadius() - getDelta())) ;
+                sphere.setRadius(getRadius());
                 sphereHandler.push_back(sphere);
             }
         }
     }
 }
 
-void Plate::populate()
-{
-    for (const auto & sphere : sphereHandler) {
-        xColumn_.push_back(sphere.getX());
-        yColumn_.push_back(sphere.getY());
-        zColumn_.push_back(sphere.getZ());
-    }
-}
-
-void  Plate::writeToFile(const std::string &delimiter )
-{
-    file_.setName(name_);
-    file_.setHandler(sphereHandler);
-    file_.writeToFile(delimiter);
-}
 
 /*!
  * \brief function to render the spheres and show them using VTK.
- * */
-void Plate::showShape()
-{
-    constructor();
-    RenderShape::renderSphere(minRadius_, xColumn_, yColumn_, zColumn_);
-}
-
+ */
 int Plate::nLayersInX() const
 {
-    return ceil((lx_ + delta_) / (2 * minRadius_ - delta_));
+    return ceil((lx_ + getDelta()) / (2 * getRadius() - getDelta()));
 }
 
 int Plate::nLayersInY() const
 {
-    return ceil((ly_ + delta_ ) / (2 * minRadius_ - delta_)) ;
+    return ceil((ly_ + getDelta() ) / (2 * getRadius() - getDelta())) ;
 }
 
 int Plate::nLayersInZ() const
 {
-    return ceil((lz_ + delta_) / (2 * minRadius_ - delta_));
+    return ceil((lz_ + getDelta()) / (2 * getRadius() - getDelta()));
 }
 
 bool Plate::isParticleOverlap(const Sphere& p)
@@ -121,7 +104,7 @@ bool Plate::isParticleOverlap(const Sphere& p)
         // calculate the distance between particles
         double d = distance(p, s);
 
-        if (d < (p.getRadius() + s.getRadius() - delta_))
+        if (d < (p.getRadius() + s.getRadius() - getDelta()))
         {
             interaction = true;
             break;
@@ -139,7 +122,6 @@ double Plate::distance(const Sphere& sphere1, const Sphere& sphere2)
     return sqrt(xSquare + ySquare + zSquare);
 }
 
-
 /// Getters
 double Plate::getXLength() const
 {
@@ -154,11 +136,6 @@ double Plate::getYLength() const
 double Plate::getZLength() const
 {
     return lz_;
-}
-
-double Plate::getDelta() const
-{
-    return delta_;
 }
 
 Point Plate::getOrigin() const

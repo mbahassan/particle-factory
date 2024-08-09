@@ -25,7 +25,7 @@ public:
     void setName(std::string& fname);
 
     /// Member Functions
-    void writeToFile(const std::string &delimiter);
+    virtual void writeToFile(const std::string &delimiter);
 
 private:
 

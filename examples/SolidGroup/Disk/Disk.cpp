@@ -5,7 +5,8 @@
 #include "CircleSection.h"
 
 
-int main(int argc, char ** argv){
+int main(int argc, char ** argv)
+{
     double rmin = 0.05, delta = 0.000;
     double R = 3*(rmin*2) + rmin;
     Point orig(0., 0., 0.);
@@ -14,6 +15,5 @@ int main(int argc, char ** argv){
     circleSection.setName(name);
     circleSection.showShape();
     circleSection.writeToFile(delim);
-
     return 0;
 }
